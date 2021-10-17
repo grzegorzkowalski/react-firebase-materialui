@@ -1,7 +1,6 @@
 import ClickTest from "../../Counter";
 
 const Home = () => {
-    const name = "Grzegorz";
     const tab = ["Ala"];
     return (
         <div>
