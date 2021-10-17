@@ -1,23 +1,37 @@
 import { useState } from 'react';
+import { useHistory } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+} from "firebase/auth";
 import app from "../../firebase/firebaseConfig";
 
 const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    let history = useHistory();
 
     const submitHandler = (e) => {
         e.preventDefault();
         console.log(email, password);
         const auth = getAuth(app);
         createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                console.log(user);
+            .then(() => {
+                signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        console.log(userCredential);
+                        history.push("/");
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        console.log(errorCode, errorMessage);
+                    });
             })
             .catch((error) => {
                 const errorCode = error.code;
